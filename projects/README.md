@@ -14,4 +14,4 @@ This folder contains all Solidity projects or audits that I have developed while
 
 | Project | Status |
 |----------|--------|
-| Lottery Smart Contract | 
+| Lottery Smart Contract | Completed |
