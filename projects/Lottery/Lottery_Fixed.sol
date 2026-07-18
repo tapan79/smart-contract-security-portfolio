@@ -4,24 +4,34 @@ pragma solidity >=0.7.0 <0.9.0;
 
 contract Lottery
 {
+    // Entry fees from participants
+    uint public entryFee = 1 ether;
+
     // owner or manager of contract
     address public manager;
 
-    // address of players - create dynamic array whose name is players
-    address payable[] public players;
-
     // address of winner
     address payable public winner;
+
+    // address of players - create dynamic array whose name is players
+    address payable[] public players;
 
     constructor()
     {
         manager = msg.sender; // msg.sender is deployer whose address is stored in manager
     }
 
+    // change entry fee 
+    function changeEntryFee(_entryFee) public
+    {
+        require(msg.sender == manager, "Only manager change the entry fee");
+        entryFee = _entryFee;
+    }
+
     event PlayerJoined(address indexed player); // create event for blockchain log - participants added
     function participate() public payable
     {
-        require(msg.value == 1 ether, "Please pay only one ether"); // store the ether in contract address
+        require(msg.value == entryFee, "Incorrect entry fee"); // store the ether in contract address
         players.push(payable(msg.sender)); // store the address in players dynamic size array
 
         emit PlayerJoined(msg.sender);
