@@ -21,10 +21,21 @@ contract Lottery
         manager = msg.sender; // msg.sender is deployer whose address is stored in manager
     }
 
+    // change manager if manager role is change to new manager
+    function transferManager(address newManager) public onlyManager {
+    require(newManager != address(0), "Invalid address");
+    manager = newManager;
+    }
+    
+    // modifier as manager
+    modifier onlyManager() {
+    require(msg.sender == manager, "Only manager can call this function");
+    _;
+    }
+
     // change entry fee 
-    function changeEntryFee(_entryFee) public
+    function changeEntryFee(_entryFee) public onlyManager
     {
-        require(msg.sender == manager, "Only manager change the entry fee");
         entryFee = _entryFee;
     }
 
@@ -38,9 +49,8 @@ contract Lottery
     }
 
     // to get balance of this contract or deployer
-    function getbalance() public view returns(uint)
+    function getbalance() public view returns(uint) onlyManager
     {
-        require(manager == msg.sender, "only manager allow this function to check the balance of contract");
         return address(this).balance; // check the total balance of contract, the function called by only the manager.
     }
 
@@ -51,9 +61,8 @@ contract Lottery
 
     event WinnerSelected(address indexed winner, uint256 prize); // create event for selecting the winner and amount transfer to the winner
 
-    function pickwinner() public
+    function pickwinner() public onlyManager
     {
-        require(manager == msg.sender, "You are not manager");
         require(players.length >= 3, "Players are less than three");
 
         uint index = random() % players.length;
