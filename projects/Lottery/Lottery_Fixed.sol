@@ -46,7 +46,7 @@ contract Lottery
 
     function random() internal view returns(uint) // here, internal visibilty used means contract call itself this function
     {
-        return uint(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, players.length)));
+        return uint(keccak256(abi.encodePacked(block.prevrandao, block.timestamp, players.length, address(this).balance)));
     }
 
     event WinnerSelected(address indexed winner, uint256 prize); // create event for selecting the winner and amount transfer to the winner
